@@ -14,13 +14,11 @@ PRISM.tpl <- PRISM.tpl %>%
   dplyr::mutate(boxtext = case_when(data == "identification"~"Identification", T~boxtext))
 
 # Loading initial articles database ####
-# Scopus - 99; PubMed = 54
+# Scopus - 11; Google Scholar 997; CrossRef;  
 articles <- data.frame(ID = NA, Type = NA, Authors = NA, Year = NA, Title = NA, Journal = NA,
                        Abstract = NA, Keywords = NA, DOI = NA, Source = NA)
 sursa <- bib2df("scopus.bib"); source <- "Scopus"; rec <- 1
-sursa <- bib2df("pubmed.bib"); source <- "PubMed"; rec <- 1
-sursa <- bib2df("sciencedirect.bib"); source <- "Science Direct"; rec <- 1
-sursa <- bib2df("gscholar.bib"); source <- "Google Scholar"; rec <- 1
+sursa <- bib2df("GScholar.bib"); source <- "Google Scholar"; rec <- 1
 while (rec <= nrow(sursa)) {
   rand <- sursa %>% dplyr::filter(BIBTEXKEY == sursa$BIBTEXKEY[rec])
   id <- rand$BIBTEXKEY
@@ -85,7 +83,7 @@ PRISM.tpl$n[which(PRISM.tpl$data == 'excluded_automatic')] <- total.automatic
 save(PRISM.tpl, file = 'PRISMA.RData')
 
 # III. Searching by TITLE ####
-tmp <- screen_titles(x = articles)
+tmp <- screen_titles(x = articles) #NU DESCHIDE!
 save(tmp, file = "Temp.Rdata")
 tmp <- screen_titles(x = tmp)
 
