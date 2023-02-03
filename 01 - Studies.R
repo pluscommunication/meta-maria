@@ -1,10 +1,11 @@
-# Installing and loading packages
+# Installing and loading packages####
 if(!require(revtools)) install.packages("revtools")
 if(!require(PRISMA2020)) install.packages("PRISMA2020")
 if(!require(dplyr)) install.packages("dplyr")
 if(!require(bib2df)) install.packages("bib2df")
 if(!require(writexl)) install.packages("writexl")
 
+#Rulare pachete####
 library(revtools); library(PRISMA2020); library(dplyr)
 library(bib2df); library(writexl)
 
@@ -68,7 +69,6 @@ total.duplicates <- total.db - nrow(tmp)
 articles <- tmp; save(articles, file = "Article 2.RData")
 # PRISMA - DUPLICATES ####
 PRISM.tpl$n[which(PRISM.tpl$data == 'duplicates')] <- total.duplicates
-save(PRISM.tpl, file = 'PRISMA.RData')
 
 # II. Searching by automatic tools ####
 tmp <- screen_topics(x = articles)
@@ -86,9 +86,18 @@ save(PRISM.tpl, file = 'PRISMA.RData')
 tmp <- screen_titles(x = articles) #NU DESCHIDE!
 save(tmp, file = "Temp.Rdata")
 tmp <- screen_titles(x = tmp)
+tmp <- tmp %>% dplyr::filter(screened_titles == 'selected')
+total.titles <- nrow(articles) - nrow(tmp)
+articles <- tmp; save(articles, file = "Article 4.RData")
+# PRISMA - TITLES ####
+PRISM.tpl$n[which(PRISM.tpl$data == 'excluded_other')] <- total.titles
+PRISM.tpl$n[which(PRISM.tpl$data == 'records_screened')] <- nrow(articles)
+save(PRISM.tpl, file = 'PRISMA.RData')
 
 # IV. Searching by ABSTRACT ####
-
+tmp <- screen_abstracts(x = articles) #NU DESCHIDE!
+save(tmp, file = "Temp.Rdata")
+tmp <- screen_abstracts(x = tmp)
 
 # Writing final Excel file ####
 
